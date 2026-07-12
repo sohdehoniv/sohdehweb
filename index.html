@@ -156,12 +156,15 @@
   }
   .dzt-copy{color:var(--paper);}
   .dzt-brand{display:inline-flex;align-items:center;gap:12px;margin-bottom:26px;}
-  .dzt-logo-fallback{
-    width:44px;height:44px;border-radius:12px;flex:none;
+  .dzt-logo-fallback{ 
+    width:100px;height:100px; 
+    flex:none;
     display:flex;align-items:center;justify-content:center;
-    background:linear-gradient(135deg,var(--red),var(--red-dim));
-    color:#fff;font-family:'Manrope',sans-serif;font-weight:800;font-size:15px;
-    border:1px solid rgba(255,255,255,.08);
+   
+  }
+  #logo_img{
+    width:80px;height:80px; 
+    border-radius:50%;
   }
   .dzt-brand-name{
     font-family:'Manrope',sans-serif;font-weight:700;font-size:14px;
@@ -420,7 +423,7 @@
   <div class="dzt-inner">
     <div class="dzt-copy">
       <div class="dzt-brand">
-        <div class="dzt-logo-fallback">SO</div>
+        <div class="dzt-logo-fallback"><img id="logo_img" src="assets/app_icon.png" alt=""></div>
         <span class="dzt-brand-name" data-i18n="brand.line">Now on Android · <b>SOHDEH DzTracking</b></span>
       </div>
       <span class="dzt-eyebrow" data-i18n="hero.eyebrow">New app</span>
