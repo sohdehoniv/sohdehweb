@@ -335,7 +335,7 @@
   }
   .footer-col ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:11px;}
   .footer-col a{font-size:14.5px;color:var(--paper);opacity:.85;transition:color .15s ease,opacity .15s ease;}
-  .footer-col a:hover{color:var(--red);opacity:1;}
+  .footer-col a:hover{color:var(--red);opacity:1; cursor: pointer;}
   .footer-bottom{
     display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;
     padding-top:26px;font-size:13px;color:var(--muted-dim);
@@ -344,6 +344,34 @@
   ::selection{background:var(--red);color:#fff;}
   :focus-visible{outline:2px solid var(--red);outline-offset:2px;}
 
+/* ---------- POPUP COMPONENT CSS ---------- */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px);
+    z-index: 100; display: flex; align-items: center; justify-content: center;
+    opacity: 0; visibility: hidden; transition: opacity .25s ease, visibility .25s ease;
+    padding: 20px;
+  }
+  .modal-overlay.active { opacity: 1; visibility: visible; }
+  .modal-card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 20px; max-width: 500px; width: 100%;
+    padding: 32px; box-shadow: 0 30px 60px var(--shadow-strong);
+    position: relative; transform: translateY(20px); transition: transform .25s ease;
+  }
+  .modal-overlay.active .modal-card { transform: translateY(0); }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .modal-title { font-family: 'Manrope', sans-serif; font-weight: 800; font-size: 22px; color: var(--paper); }
+  html[lang="ar"] .modal-title { font-family: 'Noto Kufi Arabic', sans-serif; }
+  .modal-close {
+    background: var(--surface-2); border: 1px solid var(--line); color: var(--paper);
+    width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background .15s ease;
+  }
+  .modal-close:hover { background: var(--red); color: white; }
+  .modal-body { font-size: 15px; color: var(--muted); line-height: 1.6; }
+  .modal-body p { margin: 0 0 16px; }
+  .modal-body strong { color: var(--paper); }
   /* ================= MOBILE ================= */
   @media (max-width:900px){
     .dzt-inner{grid-template-columns:1fr;gap:8px;text-align:center;}
@@ -650,22 +678,22 @@
         <div class="footer-col">
           <h5 data-i18n="footer.col.product">Product</h5>
           <ul>
-            <li><a href="#dzt-showcase" data-i18n="footer.link.overview">Overview</a></li>
+            <li><a onclick="openModal('overview')" data-i18n="footer.link.overview">Overview</a></li>
             <li><a target="_blank" href="https://www.mediafire.com/file/8i7euxr56r3iymu/sohdeh_DzTrackingBeta.apk/file" data-i18n="footer.link.download">Download</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h5 data-i18n="footer.col.company">Company</h5>
           <ul>
-            <li><a href="#" data-i18n="footer.link.about">About</a></li>
-            <li><a href="#" data-i18n="footer.link.contact">Contact</a></li>
+            <li><a onclick="openModal('about')" data-i18n="footer.link.about">About</a></li>
+            <li><a onclick="openModal('contact')" data-i18n="footer.link.contact">Contact</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h5 data-i18n="footer.col.legal">Legal</h5>
           <ul>
-            <li><a href="#" data-i18n="footer.link.privacy">Privacy policy</a></li>
-            <li><a href="#" data-i18n="footer.link.terms">Terms of use</a></li>
+            <li><a onclick="openModal('privacy')" data-i18n="footer.link.privacy">Privacy policy</a></li>
+            <li><a onclick="openModal('terms')" data-i18n="footer.link.terms">Terms of use</a></li>
           </ul>
         </div>
       </div>
@@ -676,7 +704,17 @@
     </div>
   </div>
 </footer>
-
+<div id="info-modal" class="modal-overlay" onclick="closeModal(event)">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3 id="modal-title" class="modal-title">Title</h3>
+      <button class="modal-close" onclick="closeModal(null)">&times;</button>
+    </div>
+    <div id="modal-body" class="modal-body">
+      Content goes here...
+    </div>
+  </div>
+</div>
 <script>
 (function(){
   var translations = {
@@ -734,7 +772,18 @@
       "footer.link.privacy":"Privacy policy",
       "footer.link.terms":"Terms of use",
       "footer.copyright":"© 2026 SOHDEH. All rights reserved.",
-      "footer.availability":"Available on Android · iOS coming later"
+      "footer.availability":"Available on Android · iOS coming later",
+      // Popups
+      "modal.overview.title": "Overview",
+      "modal.overview.body": "<p>SOHDEH DzTracking is built specifically to bridge the gap between global e-commerce systems and local delivery channels. The application provides a lightweight, unified dashboard where Algerian users can save multiple universal courier codes alongside real-time store tracking insights.</p>",
+      "modal.about.title": "About SOHDEH",
+      "modal.about.body": "<p>SOHDEH DzTracking is an all-in-one platform built carefully for Algerian shoppers. Our goal is simple: to make tracking international and local parcels straightforward while bringing you genuine, verified promotional codes and live store deals.</p>",
+      "modal.contact.title": "Contact Us",
+      "modal.contact.body": "<p>Have questions or feedback about our Beta app? Reach out anytime.</p><p><strong>Email:</strong> contact@sohdeh.com<br><strong>Community:</strong> Join our official Telegram or Instagram loops below for instant update streams.</p>",
+      "modal.privacy.title": "Privacy Policy",
+      "modal.privacy.body": "<p>Your privacy matters. SOHDEH DzTracking does not harvest or trade your tracked numbers. All cache and parcel inputs stay directly linked securely inside your active native mobile application runtime workspace.</p>",
+      "modal.terms.title": "Terms of Use",
+      "modal.terms.body": "<p>By loading our client platform, you acknowledge prices and courier deal lists update live. SOHDEH  DzTracking acts exclusively as a free indexing platform tool; final transactions depend on independent partner storefront operators.</p><p><strong>Disclaimer of Liability:</strong> All shipping milestone updates, statuses, and logistic details are processed and directly provided by external data services and postal entities (e.g., Algérie Poste, EMS, global carriers). SOHDEH DzTracking functions solely as an aggregator tool. Consequently, we assume no responsibility or liability for transit delays, data inaccuracies, or errors originating from third-party handlers.</p>"
     },
     fr: {
       "nav.cta":"Télécharger",
@@ -759,7 +808,7 @@
       "feature.deals.li3":"Les offres sont actualisées instantanément.",
       "feature.details.tag":"Offre personnalisée",
       "feature.details.title":"Prix ​​le plus bas jamais constaté pour tout produit que vous recherchez.",
-      "feature.details.desc":"Collez simplement le lien d'un produit pour bénéficier du prix le plus bas ! De plus, accédez à des informations complètes sur la boutique, comme les avis clients et le nombre de commandes, pour acheter en toute confiance.",
+      "feature.details.desc":"Collez simplement le lien d'un produit pour bénéficier du prix le plus bas ! De plus, accédez à des informations complètes sur la boutique, comme les avis clients et le nombre de commandes, pour acheter en toute confiance.",
       "feature.details.li1":"Aperçu de la confiance du la boutique",
       "feature.details.li2":"Meilleur prix jamais vu",
       "feature.details.li3":"Évaluations des magasins et ventes unitaires",
@@ -790,7 +839,18 @@
       "footer.link.privacy":"Politique de confidentialité",
       "footer.link.terms":"Conditions d'utilisation",
       "footer.copyright":"© 2026 SOHDEH. Tous droits réservés.",
-      "footer.availability":"Disponible sur Android · iOS à venir"
+      "footer.availability":"Disponible sur Android · iOS à venir",
+      // Popups FR
+      "modal.overview.title": "Présentation Générale",
+      "modal.overview.body": "<p>SOHDEH DzTracking regroupe les systèmes de commerce électronique mondiaux et les canaux de livraison locaux au sein d'une interface unique. Suivez vos colis et comparez les meilleures offres instantanément.</p>",
+      "modal.about.title": "À propos de SOHDEH",
+      "modal.about.body": "<p>SOHDEH DzTracking est une plateforme tout-en-un conçue pour les acheteurs algériens. Notre objectif : simplifier le suivi de colis locaux et internationaux et vous fournir de vrais codes de réduction vérifiés.</p>",
+      "modal.contact.title": "Contactez-nous",
+      "modal.contact.body": "<p>Des questions sur notre version Bêta ? Écrivez-nous à tout moment.</p><p><strong>Email :</strong> contact@sohdeh.com<br><strong>Réseaux :</strong> Rejoignez nos canaux officiels Telegram ou Instagram ci-dessous.</p>",
+      "modal.privacy.title": "Politique de confidentialité",
+      "modal.privacy.body": "<p>SOHDEH DzTracking ne collecte ni ne partage vos numéros de suivi. Toutes vos données restent stockées localement en toute sécurité dans votre application mobile.</p>",
+      "modal.terms.title": "Conditions d'utilisation",
+      "modal.terms.body": "<p>SOHDEH DzTracking est un outil d'indexation gratuit. Les prix et les offres dépendent directement des boutiques partenaires et des vendeurs indépendants.</p><p><strong>Exclusion de responsabilité:</strong> Toutes les informations de transit logistique et statuts de colis sont gérés et fournis exclusivement par les transporteurs tiers (Algérie Poste, EMS, etc.). SOHDEH DzTracking décline toute responsabilité en cas de retard, d'erreur d'acheminement ou d'inexactitude des données fournies par ces prestataires externes.</p>"
     },
     ar: {
       "nav.cta":"حمّل التطبيق",
@@ -846,11 +906,25 @@
       "footer.link.privacy":"سياسة الخصوصية",
       "footer.link.terms":"شروط الاستخدام",
       "footer.copyright":"© 2026 SOHDEH. جميع الحقوق محفوظة.",
-      "footer.availability":"متوفر على أندرويد · تطبيق آيفون قريبًا"
-    }
+      "footer.availability":"متوفر على أندرويد · تطبيق آيفون قريبًا",
+      // Popups AR
+      "modal.overview.title": "نظرة عامة",
+      "modal.overview.body": "<p>تطبيق SOHDEH DzTracking يربط بين أنظمة التجارة الإلكترونية العالمية وقنوات التوصيل المحلية لتوفير تجربة تتبع موحدة وسلسة.</p>",
+      "modal.about.title": "حول SOHDEH",
+      "modal.about.body": "<p>تطبيق SOHDEH DzTracking منصة متكاملة تم تطويرها لمساعدتك في تتبع الطرود المحلية والدولية (بريد الجزائر، EMS) واكتشاف أقوى الكوبونات والعروض الحية في مكان واحد.</p>",
+      "modal.contact.title": "اتصل بنا",
+      "modal.contact.body": "<p>هل لديك أي استفسار أو تعليق حول النسخة التجريبية؟ تواصل معنا في أي وقت.</p><p><strong>البريد الإلكتروني:</strong> contact@sohdeh.com<br><strong>المجتمع:</strong> انضم لقنواتنا الرسمية على تليجرام أو إنستغرام في الأسفل لمتابعة آخر التحديثات.</p>",
+      "modal.privacy.title": "سياسة الخصوصية",
+      "modal.privacy.body": "<p>خصوصيتك تهمنا تماماً. لا يقوم تطبيق SOHDEH DzTracking بجمع أو مشاركة أرقام التتبع الخاصة بك. تبقى جميع بيانات الطرود محفوظة محلياً داخل جهازك بأمان.</p>",
+      "modal.terms.title": "شروط الاستخدام",
+      "modal.terms.body": "<p>باستخدامك للتطبيق، فإنك توافق على أن العروض والأسعار يتم تحديثها تلقائياً. تطبيق SOHDEH DzTracking هو أداة مجانية لعرض وتنسيق الصفقات، وتعتمد عمليات الشراء على المتاجر الأصلية.</p><p><strong>حدود المسؤولية:</strong> يتم توفير ومعالجة كافة تفاصيل وحالات ومعلومات تتبع الشحنات بشكل مباشر من قِبل جهات النقل ومزودي البيانات الخارجيين (مثل بريد الجزائر، EMS، وشركات الشحن الدولية). يعمل تطبيق SOHDEH DzTracking كوسيط فقط لعرض هذه البيانات؛ وبالتالي، فإننا لا نتحمل أي مسؤولية قانونية عن أي تأخير في الشحن، أو عدم دقة، أو أخطاء ناتجة عن تلك الأطراف الخارجية.</p>"}
   };
 
+  // Keep track of active application language globally
+  var currentLang = 'en';
+
   window.setLang = function(lang){
+    currentLang = lang;
     var dict = translations[lang];
     if(!dict) return;
     document.documentElement.lang = lang;
@@ -876,10 +950,29 @@
     document.getElementById('theme-icon-moon').style.display = theme === 'light' ? 'none' : 'block';
   }
 
+  // MODAL INTERACTIVE LOGIC
+  window.openModal = function(type) {
+    var dict = translations[currentLang];
+    if(!dict) return;
+
+    var title = dict["modal." + type + ".title"] || "Info";
+    var body = dict["modal." + type + ".body"] || "";
+
+    document.getElementById("modal-title").innerHTML = title;
+    document.getElementById("modal-body").innerHTML = body;
+    document.getElementById("info-modal").classList.add("active");
+  };
+
+  window.closeModal = function(e) {
+    if(!e || e.target === document.getElementById("info-modal")) {
+      document.getElementById("info-modal").classList.remove("active");
+    }
+  };
+
   var prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
   applyTheme(prefersLight ? 'light' : 'dark');
+  setLang('ar');
 })();
-setLang('ar');
 </script>
 
 </body>
